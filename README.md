@@ -1,6 +1,6 @@
 # grunt-output
 
-> Output messages as grunt.log / grunt.verbose would with multiple options
+> Output messages with grunt.log() / grunt.verbose(). Having a task to output messages has some advantages over grunt.log function: on the one hand it will queue messages so they will be actually printed before or after another task; on the other it will allow you to have predefined templates to output headers, separators, etc with colors and styling.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -17,6 +17,8 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-output');
 ```
 
+Another great way to automatically load NPM tasks is to use the [load-grunt-tasks](https://github.com/sindresorhus/load-grunt-tasks) plugin.
+
 ## The "output" task
 
 ### Overview
@@ -25,65 +27,170 @@ In your project's Gruntfile, add a section named `output` to the data object pas
 ```js
 grunt.initConfig({
   output: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
-  },
+    your_style: {
+      before :
+      {
+        mode : 'log',
+        func : 'writeln',
+        before : '',
+        text : '************************************************************************************',
+        color : 'magenta',
+        styles: ['bold']
+      },
+      content :
+      {
+        mode : 'log',
+        func : 'writeln',
+        before : '>> ',
+        after : ' <<',
+        color: 'white',
+        styles: ['bold']
+      },
+      after :
+      {
+        mode : 'log',
+        func : 'writeln',
+        text : '************************************************************************************',
+        color : 'magenta',
+        styles: ['bold']
+      }
+    }
+  }
 });
 ```
 
+Another great way to automatically configure tasks is to use the [load-grunt-config](https://github.com/firstandthird/load-grunt-config) plugin.
+
+After that you can log messages calling the output task:
+```js
+grunt.task.run('output:h1:This is the begining of my build script!');
+```
+Which will log the following text when the task is executed (asterisks will be in magenta color and text in white):
+```shell
+************************************************************************************
+>> This is the begining of my build script! <<
+************************************************************************************
+```
+
+
 ### Options
+You can set three options in your targets: 'before', 'content' and 'after'. Options 'before' and 'after' define the text lines that will be logged before and after the message you want to output. The 'content' option defines the line with your message. Each of these options accept the same suboptions, represented here:
 
-#### options.separator
+#### options.mode
 Type: `String`
-Default value: `',  '`
+Default value: `'log'`
 
-A string value that is used to do something with whatever.
+Which grunt object use to log (either 'log' or 'verbose'). More information about them can be found in http://gruntjs.com/api/grunt.log
 
-#### options.punctuation
+#### options.func
 Type: `String`
-Default value: `'.'`
+Default value: `'writeln'`
 
-A string value that is used to do something else with whatever else.
+Which of the grunt object's functions use to log. More information about them can be found in http://gruntjs.com/api/grunt.log
+
+#### options.before
+Type: `String`
+Default value: `''`
+
+String to add before the text line.
+
+#### options.after
+Type: `String`
+Default value: `''`
+
+String to add after the text line.
+
+#### options.text
+Type: `String`
+Default value: `''`
+
+String in the middle of the line.
+
+#### options.color
+Type: `String`
+Default value: `''`
+
+Text color of the line to be printed. You can use any color available in the [npm colors package](https://www.npmjs.com/package/colors).
+
+#### options.styles
+Type: `Array`
+Default value: `[]`
+
+Array of styles to apply to the line of text. You can use any style available in the [npm colors package](https://www.npmjs.com/package/colors).
+
+#### options.extras
+Type: `Array`
+Default value: `[]`
+
+Array of extras to apply to the line of text. You can use any extra available in the [npm colors package](https://www.npmjs.com/package/colors).
+
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+#### Header 1 style
+In this example, we are defining a colorful style for a heading:
 
 ```js
 grunt.initConfig({
   output: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    h1 : {
+        before :
+        {
+            text : '************************************************************************************\n',
+            after : '************************************************************************************',
+            styles: ['bold'],
+            extras: ['rainbow']
+        },
+        content :
+        {
+            before : '>> ',
+            after : ' <<',
+            color: 'cyan',
+            styles: ['underline', 'bold']
+        },
+        after :
+        {
+            text : '************************************************************************************\n',
+            after : '************************************************************************************',
+            color : 'magenta',
+            styles: ['cyan'],
+            extras: ['rainbow']
+        }
+    }
 });
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+Which can be called with:
+
+```js
+grunt.task.run('output:h1:The beginning of the end');
+```
+
+#### Header 4 style
+This is a not so visible header style that will be only showed in verbose mode (grunt -v ...).
 
 ```js
 grunt.initConfig({
   output: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    h4 : {
+        content :
+        {
+            before : '>> ',
+            after : ' <<',
+            color: 'yellow',
+            styles: ['bold']
+        }
+    }
 });
 ```
+
+
+Which can be called with:
+
+```js
+grunt.task.run('output:h1:The beginning of the end');
+```
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_
