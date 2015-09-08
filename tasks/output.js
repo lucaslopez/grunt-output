@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 /*
  * grunt-output
  * https://github.com/lucaslopez/grunt-output
@@ -10,68 +8,115 @@ var _ = require('lodash');
 
 'use strict';
 
+var _ = require('lodash');
+
+var chunks = ['before', 'content', 'after'];
+var varsGrunt = 
+{
+	printers : ['log', 'verbose'],
+	functions : ['write', 'writeln', 'error', 'errorlns', 'ok', 'oklns', 'subhead', 'writeflags', 'debug']
+};
+var varsColor = 
+{
+	colors : ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray', 'grey'],
+	backgrounds : ['bgBlack', 'bgRed', 'bgGreen', 'bgYellow', 'bgBlue', 'bgMagenta', 'bgCyan', 'bgWhite'],
+	styles : ['reset', 'bold', 'dim', 'italic', 'underline', 'inverse', 'hidden', 'hidden'],
+	extras : ['rainbow', 'zebra', 'america', 'trap', 'random']
+};
+
+
 module.exports = function(grunt) {
 
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
-
   grunt.registerMultiTask('output', 'Output messages as grunt.log / grunt.verbose would with multiple options', function(text) {
-    // Merge task-specific and/or target-specific options with these defaults.
-    
+
 	var defaultOptions = this.options({
       before: {
 		mode: 'log',
 		func: 'writeln',
-		color: 'white',
-		bold: true,
 		text: '',
 		before: '',
-		after: ''
+		after: '',
+		color: '',
+		background: '',
+		styles: [],
+		extras: []
 	  },
 	  content: {
 		mode: 'log',
 		func: 'writeln',
-		color: 'white',
-		bold: true,
 		before: '',
-		after: ''
+		after: '',
+		color: '',
+		background: '',
+		styles: [],
+		extras: []
 	  },
       after: {
 		mode: 'log',
 		func: 'writeln',
-		color: 'white',
-		bold: true,
 		text: '',
 		before: '',
-		after: ''
+		after: '',
+		color: '',
+		background: '',
+		styles: [],
+		extras: []
 	  }
     });
 	
 	var options = _.merge(defaultOptions, this.data);
 	
-	var chunks = ['before', 'content', 'after'];
-	var validPrinters = ['log', 'verbose'];
-	var validFunctions = ['write', 'writeln', 'error', 'errorlns', 'ok', 'oklns', 'subhead', 'writeflags', 'debug'];
-	var validColors = ['white', 'black', 'grey', 'blue', 'cyan', 'green', 'magenta', 'red', 'yellow', 'rainbow'];
-	
 	chunks.forEach(function(chunk) {
 		var chunkOptions = options[chunk];
-		if (validPrinters.indexOf(chunkOptions.mode) != -1 && validFunctions.indexOf(chunkOptions.func) != -1 )
+		if (varsGrunt.printers.indexOf(chunkOptions.mode) != -1 && varsGrunt.functions.indexOf(chunkOptions.func) != -1 )
 		{
-			if (validColors.indexOf(chunkOptions['color']) != 1)
+			// Create message
+			var msg;
+			if (chunk == 'content') msg = text; else msg = chunkOptions.text;
+			msg = chunkOptions.before + msg + chunkOptions.after;
+			// Set color
+			if (chunkOptions.color)
 			{
-				var msg;
-				var print = grunt[chunkOptions.mode][chunkOptions.func];
-				if (chunk == 'content') msg = text; else msg = chunkOptions.text;
-				msg = chunkOptions.before + msg + chunkOptions.after;
-				msg = msg[chunkOptions.color];
-				if (chunkOptions.bold) msg = msg.bold;
-				print(msg);
-			}
-			else
+				if (varsColor.colors.indexOf(chunkOptions.color) != -1)
+					msg = msg[chunkOptions.color];
+				else
+					grunt.fail.warn("Not valid color '" + chunkOptions.color + "'. Please use one of the following list: " + JSON.stringify(varsColor.colors));
+			};
+			/*
+			// Set background color
+			if (chunkOptions.background)
 			{
-				grunt.fatal.warn('Not valid color ' + chunk.color + "'. Please use one of the following list: ['white', 'black', 'grey', 'blue', 'cyan', 'green', 'magenta', 'red', 'yellow', 'rainbow']");
-			}
+				if (varsColor.backgrounds.indexOf(chunkOptions.background) != -1)
+					msg = msg[chunkOptions.background];
+				else
+					grunt.fail.warn("Not valid background color '" + chunkOptions.background + "'. Please use one of the following list: " + JSON.stringify(varsColor.backgrounds));
+			};
+			*/
+			// Set styles
+			if (chunkOptions.styles && chunkOptions.styles instanceof Array)
+			{
+				chunkOptions.styles.forEach(function(style)	{
+					if (varsColor.styles.indexOf(style) != -1)
+						msg = msg[style];
+					else
+						grunt.fail.warn("Not valid style '" + style + "'. Please use one of the following list" + JSON.stringify(varsColor.styles));
+
+				});
+			};
+			// Set extras
+			if (chunkOptions.extras && chunkOptions.extras instanceof Array)
+			{
+				chunkOptions.extras.forEach(function(extra)	{
+					if (varsColor.extras.indexOf(extra) != -1)
+						msg = msg[extra];
+					else
+						grunt.fail.warn("Not valid extra '" + extra + "'. Please use one of the following list: " + JSON.stringify(varsColor.extras));
+
+				});
+			};
+			// Print the message
+			var print = grunt[chunkOptions.mode][chunkOptions.func];
+			print(msg);
 		}
 		else
 		{
