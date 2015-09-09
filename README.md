@@ -79,6 +79,11 @@ grunt.registerTask(
 );
 ```
 
+Or even from the shell if that makes sense for you:
+```shell
+grunt.task.run('output:my_style:This is the begining of my build script!');
+```
+
 
 Which will log the following text when the task is executed (asterisks will be in magenta color and text in white):
 ```shell
@@ -96,13 +101,13 @@ You can set three options in your targets: 'before', 'content' and 'after'. Opti
 Type: `String`
 Default value: `'log'`
 
-Which grunt object use to log (either 'log' or 'verbose'). More information about them can be found in http://gruntjs.com/api/grunt.log
+Which grunt object use to log (either 'log' or 'verbose'). More information about them can be found at the [Grunt API website](http://gruntjs.com/api/grunt.log)
 
 #### options.func
 Type: `String`
 Default value: `'writeln'`
 
-Which of the grunt object's functions use to log. More information about them can be found in http://gruntjs.com/api/grunt.log
+Which of the grunt object's functions use to log. More information about them can be found at the [Grunt API website](http://gruntjs.com/api/grunt.log)
 
 #### options.before
 Type: `String`
@@ -179,7 +184,7 @@ grunt.initConfig({
 Which can be called with:
 
 ```js
-grunt.task.run('output:h1:The beginning of the end');
+grunt.task.run('output:h1:Not only I am colorful, but also important!');
 ```
 
 #### Header 4 style
@@ -191,6 +196,7 @@ grunt.initConfig({
     h4 : {
         content :
         {
+			mode : 'verbose',
             before : '>> ',
             after : ' <<',
             color: 'yellow',
@@ -204,7 +210,7 @@ grunt.initConfig({
 Which can be called with:
 
 ```js
-grunt.task.run('output:h1:The beginning of the end');
+grunt.task.run('output:h4:I am not a very important message, almost nobody will see me');
 ```
 
 
