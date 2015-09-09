@@ -65,12 +65,28 @@ After that you can log messages calling the output task:
 ```js
 grunt.task.run('output:h1:This is the begining of my build script!');
 ```
+
+Or include the taks among your custom task:
+```js
+grunt.registerTask(
+  'default', 
+  [
+    'output:h1:This is the beginning of my build script!',
+    'build:dev',
+    'clean:dev', 
+    ...
+  ]
+);
+```
+
+
 Which will log the following text when the task is executed (asterisks will be in magenta color and text in white):
 ```shell
 ************************************************************************************
 >> This is the begining of my build script! <<
 ************************************************************************************
 ```
+
 
 
 ### Options
