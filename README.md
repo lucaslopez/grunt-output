@@ -81,7 +81,7 @@ grunt.registerTask(
 
 Or even from the shell if that makes sense for you:
 ```shell
-grunt.task.run('output:my_style:This is the begining of my build script!');
+grunt output:my_style:This is the begining of my build script!
 ```
 
 
@@ -101,13 +101,13 @@ You can set three options in your targets: 'before', 'content' and 'after'. Opti
 Type: `String`
 Default value: `'log'`
 
-Which grunt object use to log (either 'log' or 'verbose'). More information about them can be found at the [Grunt API website](http://gruntjs.com/api/grunt.log)
+Which grunt object use to log (either 'log' or 'verbose'). More information about them can be found at the [Grunt API website](http://gruntjs.com/api/grunt.log).
 
 #### options.func
 Type: `String`
 Default value: `'writeln'`
 
-Which of the grunt object's functions use to log. More information about them can be found at the [Grunt API website](http://gruntjs.com/api/grunt.log)
+Which of the grunt object's functions use to log. More information about them can be found at the [Grunt API website](http://gruntjs.com/api/grunt.log).
 
 #### options.before
 Type: `String`
