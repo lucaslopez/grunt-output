@@ -63,7 +63,7 @@ Another great way to automatically configure tasks is to use the [load-grunt-con
 
 After that you can log messages calling the output task:
 ```js
-grunt.task.run('output:h1:This is the begining of my build script!');
+grunt.task.run('output:my_style:This is the begining of my build script!');
 ```
 
 Or include the taks among your custom task:
@@ -71,7 +71,7 @@ Or include the taks among your custom task:
 grunt.registerTask(
   'default', 
   [
-    'output:h1:This is the beginning of my build script!',
+    'output:my_style:This is the beginning of my build script!',
     'build:dev',
     'clean:dev', 
     ...
