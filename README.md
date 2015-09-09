@@ -27,7 +27,7 @@ In your project's Gruntfile, add a section named `output` to the data object pas
 ```js
 grunt.initConfig({
   output: {
-    your_style: {
+    my_style: {
       before :
       {
         mode : 'log',
@@ -44,7 +44,7 @@ grunt.initConfig({
         before : '>> ',
         after : ' <<',
         color: 'white',
-        styles: ['bold']
+        styles: ['underline', 'bold']
       },
       after :
       {
@@ -174,7 +174,7 @@ grunt.initConfig({
             text : '************************************************************************************\n',
             after : '************************************************************************************',
             color : 'magenta',
-            styles: ['cyan'],
+            styles: ['bold'],
             extras: ['rainbow']
         }
     }
