@@ -1,6 +1,6 @@
 {
   "name": "grunt-output",
-  "description": "Output messages as grunt.log / grunt.verbose would with multiple options",
+  "description": "Output messages with grunt.log() / grunt.verbose() with custom colors and styling.",
   "version": "0.1.0",
   "homepage": "https://github.com/lucaslopez/grunt-output",
   "author": {
